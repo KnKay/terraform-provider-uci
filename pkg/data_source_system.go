@@ -3,7 +3,7 @@ package pkg
 import (
 	"context"
 
-	"github.com/KnKay/go-uci"
+	"github.com/digineo/go-uci"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )

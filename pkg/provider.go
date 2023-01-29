@@ -5,10 +5,12 @@ package pkg
 
 import (
 	"context"
+	"time"
 
-	uci "github.com/KnKay/go-uci"
+	"github.com/digineo/go-uci"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	"golang.org/x/crypto/ssh"
 )
 
 // Provider -
@@ -38,7 +40,7 @@ func Provider() *schema.Provider {
 	}
 }
 
-func providerConfigure(ctx context.Context, d *schema.ResourceData) (interface{}, diag.Diagnostics) {
+func providerConfigure(ctx context.Context, d *schema.ResourceData) (tree interface{}, diags diag.Diagnostics) {
 	username := d.Get("username").(string)
 	password := d.Get("password").(string)
 
@@ -50,9 +52,6 @@ func providerConfigure(ctx context.Context, d *schema.ResourceData) (interface{}
 		host = &tempHost
 	}
 
-	// Warning or errors can be collected in a slice type
-	var diags diag.Diagnostics
-
 	if (username != "") || (password != "") || (*host != "") {
 		// We have an error! There is no chance to get a connection without this!
 		diags = append(diags, diag.Diagnostic{
@@ -63,7 +62,23 @@ func providerConfigure(ctx context.Context, d *schema.ResourceData) (interface{}
 		return nil, diags
 	}
 
-	tree := uci.NewSshTree(username, password, *host)
+	config := &ssh.ClientConfig{
+		User: username,
+		Auth: []ssh.AuthMethod{
+			ssh.Password(password),
+		},
+		// Non-production only
+		HostKeyCallback: ssh.InsecureIgnoreHostKey(),
+		Timeout:         5 * time.Second,
+	}
+
+	tree, err := uci.NewSshTree(config, *host)
+	diags = append(diags, diag.Diagnostic{
+		Severity: diag.Error,
+		Summary:  err.Error(),
+		Detail:   err.Error(),
+	})
+
 	return tree, diags
 
 }
