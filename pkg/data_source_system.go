@@ -8,7 +8,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
-func dataSourceHostname() *schema.Resource {
+func dataSourceSystem() *schema.Resource {
 	return &schema.Resource{
 		ReadContext: dataSourceSystemRead,
 		Schema: map[string]*schema.Schema{
