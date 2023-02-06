@@ -18,24 +18,26 @@ func Provider() *schema.Provider {
 	return &schema.Provider{
 		Schema: map[string]*schema.Schema{
 			"host": &schema.Schema{
-				Type:     schema.TypeString,
-				Optional: false,
-				// DefaultFunc: schema.EnvDefaultFunc("HASHICUPS_HOST", nil),
+				Type:        schema.TypeString,
+				Required:    true,
+				DefaultFunc: schema.EnvDefaultFunc("OPENWRT_HOST", ""),
 			},
 			"username": &schema.Schema{
-				Type:     schema.TypeString,
-				Optional: false,
-				// DefaultFunc: schema.EnvDefaultFunc("HASHICUPS_USERNAME", nil),
+				Type:        schema.TypeString,
+				Required:    true,
+				DefaultFunc: schema.EnvDefaultFunc("OPENWRT_USERNAME", ""),
 			},
 			"password": &schema.Schema{
-				Type:      schema.TypeString,
-				Optional:  false,
-				Sensitive: true,
-				// DefaultFunc: schema.EnvDefaultFunc("HASHICUPS_PASSWORD", nil),
+				Type:        schema.TypeString,
+				Required:    true,
+				Sensitive:   true,
+				DefaultFunc: schema.EnvDefaultFunc("OPENWRT_PASSWORD", ""),
 			},
 		},
-		ResourcesMap:         map[string]*schema.Resource{},
-		DataSourcesMap:       map[string]*schema.Resource{},
+		ResourcesMap: map[string]*schema.Resource{},
+		DataSourcesMap: map[string]*schema.Resource{
+			"system": dataSourceSystem(),
+		},
 		ConfigureContextFunc: providerConfigure,
 	}
 }
@@ -56,8 +58,8 @@ func providerConfigure(ctx context.Context, d *schema.ResourceData) (tree interf
 		// We have an error! There is no chance to get a connection without this!
 		diags = append(diags, diag.Diagnostic{
 			Severity: diag.Error,
-			Summary:  "Unable to create HashiCups client",
-			Detail:   "Unable to authenticate user for authenticated HashiCups client",
+			Summary:  "Unable to create client",
+			Detail:   "Unable to authenticate user for authenticated client",
 		})
 		return nil, diags
 	}
@@ -80,5 +82,4 @@ func providerConfigure(ctx context.Context, d *schema.ResourceData) (tree interf
 	})
 
 	return tree, diags
-
 }
