@@ -1,0 +1,9 @@
+{
+    // "go.testEnvFile": "${workspaceFolder}/.env",
+    "go.testEnvVars": {
+        "OPENWRT_HOST": "BACON",
+        "OPENWRT_USERNAME": "EGGS",
+        "OPENWRT_PASSWORD": "EGGS",
+    },
+
+}
