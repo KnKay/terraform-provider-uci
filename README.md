@@ -20,5 +20,6 @@ As I wanted to learn how to write a terraform provider this seems to be a good g
 - [ ] Configure Wireguard
 
 ## Links
-[How to write a provider](https://developer.hashicorp.com/terraform/tutorials/providers/provider-setup)
+[How to write a provider](https://developer.hashicorp.com/terraform/plugin/framework)
+[Hashicups example](https://github.com/hashicorp/terraform-provider-hashicups-pf)
 [fork of an UCI go lib](github.com/KnKay/go-uci)
