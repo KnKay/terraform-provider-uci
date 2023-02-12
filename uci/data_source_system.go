@@ -27,8 +27,8 @@ type systemDataSource struct {
 
 // DataSourceModel maps the data source schema data.
 type systemDataSourceModel struct {
-	ID        types.Int64  `tfsdk:"id"`
-	Hostename types.String `tfsdk:"hostname"`
+	ID       types.Int64  `tfsdk:"id"`
+	Hostname types.String `tfsdk:"hostname"`
 }
 
 // Metadata returns the data source type name.
@@ -71,7 +71,7 @@ func (d *systemDataSource) Read(ctx context.Context, req datasource.ReadRequest,
 		)
 		return
 	}
-	state.Hostename = types.StringValue(hostname[0])
+	state.Hostname = types.StringValue(hostname[0])
 
 	// Set state
 	diags := resp.State.Set(ctx, &state)
