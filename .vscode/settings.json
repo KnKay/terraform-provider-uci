@@ -4,6 +4,7 @@
         "OPENWRT_HOST": "BACON",
         "OPENWRT_USERNAME": "EGGS",
         "OPENWRT_PASSWORD": "EGGS",
+        "TF_ACC":"yes",
     },
 
 }

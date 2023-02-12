@@ -1,4 +1,4 @@
-package tf_uci
+package uci
 
 import (
 	"context"
@@ -13,7 +13,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"golang.org/x/crypto/ssh"
 
-	uci "github.com/digineo/go-uci"
+	gouci "github.com/digineo/go-uci"
 )
 
 // Ensure the implementation satisfies the expected interfaces
@@ -165,7 +165,7 @@ func (p *uciProvider) Configure(ctx context.Context, req provider.ConfigureReque
 		Timeout:         5 * time.Second,
 	}
 
-	client, err := uci.NewSshTree(conf, host)
+	client, err := gouci.NewSshTree(conf, host)
 	// // Create a new client using the configuration values
 	if err != nil {
 		resp.Diagnostics.AddError(

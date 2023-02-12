@@ -1,4 +1,4 @@
-package tf_uci
+package uci
 
 import (
 	"context"
