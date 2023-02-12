@@ -129,8 +129,17 @@ func (r *systemResource) Read(ctx context.Context, req resource.ReadRequest, res
 
 // Update updates the resource and sets the updated Terraform state on success.
 func (r *systemResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
+	// We call the create. As we know the provider is always creating a file. There is no update!
+	creq := resource.CreateRequest{
+		Config:       req.Config,
+		Plan:         req.Plan,
+		ProviderMeta: req.ProviderMeta,
+	}
+	r.Create(ctx, creq, (*resource.CreateResponse)(resp))
 }
 
 // Delete deletes the resource and removes the Terraform state on success.
 func (r *systemResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
+	// We can not delete this! It will destroy the system!
+	resp.Diagnostics.AddWarning("You can not delete the system!", "Otherwise it will happen a very bad thing!")
 }
