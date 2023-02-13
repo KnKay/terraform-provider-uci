@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/digineo/go-uci"
+	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/types"
@@ -27,7 +28,7 @@ type systemResource struct {
 }
 
 type systemResourceModel struct {
-	ID          types.Int64  `tfsdk:"id"`
+	ID          types.String `tfsdk:"id"`
 	LastUpdated types.String `tfsdk:"last_updated"`
 	Hostname    types.String `tfsdk:"hostname"`
 }
@@ -49,7 +50,7 @@ func (r *systemResource) Configure(_ context.Context, req resource.ConfigureRequ
 func (r *systemResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		Attributes: map[string]schema.Attribute{
-			"id": schema.Int64Attribute{
+			"id": schema.StringAttribute{
 				Computed: true,
 			},
 			"last_updated": schema.StringAttribute{
@@ -71,7 +72,7 @@ func (r *systemResource) Create(ctx context.Context, req resource.CreateRequest,
 	if resp.Diagnostics.HasError() {
 		return
 	}
-	plan.ID = types.Int64Value(int64(1))
+	plan.ID = types.StringValue("1")
 	// Update configuration
 	r.client.LoadConfig("system", true)
 	r.client.Set("system", "@system[0]", "hostname", plan.Hostname.ValueString())
@@ -108,7 +109,7 @@ func (r *systemResource) Read(ctx context.Context, req resource.ReadRequest, res
 		)
 		return
 	}
-	state.ID = types.Int64Value(int64(1))
+	state.ID = types.StringValue("1")
 	hostname, exist := r.client.Get("system", "@system[0]", "hostname")
 	if !exist {
 		resp.Diagnostics.AddError(
@@ -142,4 +143,9 @@ func (r *systemResource) Update(ctx context.Context, req resource.UpdateRequest,
 func (r *systemResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
 	// We can not delete this! It will destroy the system!
 	resp.Diagnostics.AddWarning("You can not delete the system!", "Otherwise it will happen a very bad thing!")
+}
+
+func (r *systemResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
+	// Retrieve import ID and save to id attribute
+	resource.ImportStatePassthroughID(ctx, path.Root("id"), req, resp)
 }

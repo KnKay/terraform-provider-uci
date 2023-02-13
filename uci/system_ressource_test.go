@@ -38,12 +38,12 @@ resource "uci_system" "test" {
 			{
 				Config: providerConfig + `
 resource "uci_system" "test" {
-	hostname = "OpentWrt"
+	hostname = "OpenWrt"
 }
 `,
 				Check: resource.ComposeAggregateTestCheckFunc(
 					// Verify first order item updated
-					resource.TestCheckResourceAttr("uci_system.test", "hostname", "OpentWrt"),
+					resource.TestCheckResourceAttr("uci_system.test", "hostname", "OpenWrt"),
 				),
 			},
 			// Delete testing automatically occurs in TestCase
