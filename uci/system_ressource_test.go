@@ -13,21 +13,21 @@ func TestAccSystemResource(t *testing.T) {
 			// Create and Read testing
 			{
 				Config: providerConfig + `
-resource "system" "test" {
+resource "uci_system" "test" {
   hostname = "test"
 }
 `,
 				Check: resource.ComposeAggregateTestCheckFunc(
 					// Verify number of items
-					resource.TestCheckResourceAttr("system.test", "hostname", "test"),
+					resource.TestCheckResourceAttr("uci_system.test", "hostname", "test"),
 					// Verify dynamic values have any value set in the state.
-					resource.TestCheckResourceAttrSet("system.test", "id"),
-					resource.TestCheckResourceAttrSet("system.test", "last_updated"),
+					resource.TestCheckResourceAttrSet("uci_system.test", "id"),
+					resource.TestCheckResourceAttrSet("uci_system.test", "last_updated"),
 				),
 			},
 			// ImportState testing
 			{
-				ResourceName:      "system.test",
+				ResourceName:      "uci_system.test",
 				ImportState:       true,
 				ImportStateVerify: true,
 				// The last_updated attribute does not exist in the HashiCups
@@ -37,13 +37,13 @@ resource "system" "test" {
 			// Update and Read testing
 			{
 				Config: providerConfig + `
-resource "system" "test" {
+resource "uci_system" "test" {
 	hostname = "OpentWrt"
 }
 `,
 				Check: resource.ComposeAggregateTestCheckFunc(
 					// Verify first order item updated
-					resource.TestCheckResourceAttr("system.test", "hostname", "OpentWrt"),
+					resource.TestCheckResourceAttr("uci_system.test", "hostname", "OpentWrt"),
 				),
 			},
 			// Delete testing automatically occurs in TestCase

@@ -49,7 +49,7 @@ func (r *systemResource) Configure(_ context.Context, req resource.ConfigureRequ
 func (r *systemResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		Attributes: map[string]schema.Attribute{
-			"id": schema.StringAttribute{
+			"id": schema.Int64Attribute{
 				Computed: true,
 			},
 			"last_updated": schema.StringAttribute{
@@ -71,7 +71,7 @@ func (r *systemResource) Create(ctx context.Context, req resource.CreateRequest,
 	if resp.Diagnostics.HasError() {
 		return
 	}
-
+	plan.ID = types.Int64Value(int64(1))
 	// Update configuration
 	r.client.LoadConfig("system", true)
 	r.client.Set("system", "@system[0]", "hostname", plan.Hostname.ValueString())
