@@ -12,12 +12,13 @@ As I wanted to learn how to write a terraform provider this seems to be a good g
 
 - [x] Build a provider
 - [x] Set hostname
-- [ ] Set root password
+- [x] Configure WAN
 - [ ] Handle backups (download upload)
-- [ ] Handle package installs
-- [ ] Configure WAN
+- [ ] Configure strongswan
 - [ ] Configure WLAN
-- [ ] Configure Wireguard
+- [ ] Set root password
+- [ ] Handle package installs
+
 
 ## Links
 [How to write a provider](https://developer.hashicorp.com/terraform/plugin/framework)

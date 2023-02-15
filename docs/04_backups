@@ -1,0 +1,9 @@
+# Backup
+
+OpenWRT has a backup functionality.
+https://openwrt.org/docs/guide-user/troubleshooting/backup_restore
+
+This should be utilized like mentioned. Just run a script and scp the file.
+
+## SCP
+SCP is implemented in this repo. This is done as it is just a very small helper thing.
