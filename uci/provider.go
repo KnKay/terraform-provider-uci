@@ -187,6 +187,7 @@ func (p *uciProvider) Configure(ctx context.Context, req provider.ConfigureReque
 func (p *uciProvider) DataSources(_ context.Context) []func() datasource.DataSource {
 	return []func() datasource.DataSource{
 		NewSystemDataSource,
+		NewNetworkDataSource,
 	}
 }
 
