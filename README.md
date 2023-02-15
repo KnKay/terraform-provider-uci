@@ -10,8 +10,8 @@ As I wanted to learn how to write a terraform provider this seems to be a good g
 
 ## Actual goals
 
-- [ ] Build a provider
-- [ ] Set hostname
+- [x] Build a provider
+- [x] Set hostname
 - [ ] Set root password
 - [ ] Handle backups (download upload)
 - [ ] Handle package installs
