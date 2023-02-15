@@ -20,6 +20,8 @@ type wanModel struct {
 	IP        types.String `tfsdk:"ip"`
 	INTERFACE types.String `tfsdk:"interface"`
 	PROTO     types.String `tfsdk:"proto"`
+	NETMASK   types.String `tfsdk:"netmask"`
+	GATEWAY   types.String `tfsdk:"gateway"`
 }
 
 // Ensure the implementation satisfies the expected interfaces.
@@ -61,6 +63,12 @@ func (d *networkDataSource) Schema(_ context.Context, _ datasource.SchemaRequest
 					"proto": schema.StringAttribute{
 						Computed: true,
 					},
+					"netmask": schema.StringAttribute{
+						Computed: true,
+					},
+					"gateway": schema.StringAttribute{
+						Computed: true,
+					},
 				},
 			},
 		},
@@ -91,6 +99,16 @@ func (d *networkDataSource) Read(ctx context.Context, req datasource.ReadRequest
 	}
 	state.WAN.PROTO = types.StringValue(proto[0])
 
+	interf, exist := d.client.Get("network", "wan", "device")
+	if !exist {
+		resp.Diagnostics.AddError(
+			"Unable to get wan ip",
+			err.Error(),
+		)
+		return
+	}
+	state.WAN.INTERFACE = types.StringValue(interf[0])
+
 	ip, exist := d.client.Get("network", "wan", "ip")
 	if !exist {
 		resp.Diagnostics.AddWarning(
@@ -104,15 +122,32 @@ func (d *networkDataSource) Read(ctx context.Context, req datasource.ReadRequest
 		state.WAN.IP = types.StringValue(ip[0])
 	}
 
-	interf, exist := d.client.Get("network", "wan", "device")
+	netmask, exist := d.client.Get("network", "wan", "ip")
 	if !exist {
-		resp.Diagnostics.AddError(
+		resp.Diagnostics.AddWarning(
 			"Unable to get wan ip",
 			err.Error(),
 		)
-		return
 	}
-	state.WAN.INTERFACE = types.StringValue(interf[0])
+	if len(ip) == 0 {
+		state.WAN.NETMASK = types.StringValue("unknown")
+	} else {
+		state.WAN.NETMASK = types.StringValue(netmask[0])
+	}
+
+	gateway, exist := d.client.Get("network", "wan", "ip")
+	if !exist {
+		resp.Diagnostics.AddWarning(
+			"Unable to get wan ip",
+			err.Error(),
+		)
+	}
+	if len(ip) == 0 {
+		state.WAN.GATEWAY = types.StringValue("unknown")
+	} else {
+		state.WAN.GATEWAY = types.StringValue(gateway[0])
+	}
+
 	// Set state
 	diags := resp.State.Set(ctx, &state)
 	resp.Diagnostics.Append(diags...)
