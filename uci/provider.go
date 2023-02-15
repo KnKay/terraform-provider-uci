@@ -195,5 +195,6 @@ func (p *uciProvider) DataSources(_ context.Context) []func() datasource.DataSou
 func (p *uciProvider) Resources(_ context.Context) []func() resource.Resource {
 	return []func() resource.Resource{
 		NewSystemResource,
+		NewNetworkRessource,
 	}
 }
