@@ -86,7 +86,7 @@ func (r *networkResource) Create(ctx context.Context, req resource.CreateRequest
 	r.client.Set("network", "wan", "proto", plan.WAN.PROTO.ValueString())
 	proto := plan.WAN.PROTO.ValueString()
 	if proto != "dhcp" {
-		r.client.Set("network", "wan", "ip", plan.WAN.IP.ValueString())
+		r.client.Set("network", "wan", "ipaddr", plan.WAN.IP.ValueString())
 		r.client.Set("network", "wan", "netmask", plan.WAN.NETMASK.ValueString())
 		r.client.Set("network", "wan", "gateway", plan.WAN.GATEWAY.ValueString())
 	}
@@ -145,7 +145,7 @@ func (r *networkResource) Read(ctx context.Context, req resource.ReadRequest, re
 	}
 	state.WAN.INTERFACE = types.StringValue(interf[0])
 
-	ip, exist := r.client.Get("network", "wan", "ip")
+	ip, exist := r.client.Get("network", "wan", "ipaddr")
 	if !exist {
 		resp.Diagnostics.AddWarning(
 			"Unable to get wan ip",
@@ -156,7 +156,7 @@ func (r *networkResource) Read(ctx context.Context, req resource.ReadRequest, re
 		state.WAN.IP = types.StringValue(ip[0])
 	}
 
-	netmask, exist := r.client.Get("network", "wan", "ip")
+	netmask, exist := r.client.Get("network", "wan", "netmask")
 	if !exist {
 		resp.Diagnostics.AddWarning(
 			"Unable to get wan ip",
@@ -167,7 +167,7 @@ func (r *networkResource) Read(ctx context.Context, req resource.ReadRequest, re
 		state.WAN.NETMASK = types.StringValue(netmask[0])
 	}
 
-	gateway, exist := r.client.Get("network", "wan", "ip")
+	gateway, exist := r.client.Get("network", "wan", "ipaddr")
 	if !exist {
 		resp.Diagnostics.AddWarning(
 			"Unable to get wan ip",
