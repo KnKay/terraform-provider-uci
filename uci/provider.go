@@ -13,6 +13,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"golang.org/x/crypto/ssh"
 
+	"github.com/digineo/go-uci"
 	gouci "github.com/digineo/go-uci"
 )
 
@@ -27,6 +28,11 @@ func New() provider.Provider {
 }
 
 type uciProvider struct{}
+
+type uciConnection struct {
+	Config *ssh.ClientConfig
+	Client *uci.SshTree
+}
 
 // hashicupsProviderModel maps provider schema data to a Go type.
 type uciProviderModel struct {
@@ -176,10 +182,14 @@ func (p *uciProvider) Configure(ctx context.Context, req provider.ConfigureReque
 		)
 		return
 	}
+	connection := uciConnection{
+		Client: client,
+		Config: conf,
+	}
 	// Make the uci client available during DataSource and Resource
 	// type Configure methods.
-	resp.DataSourceData = client
-	resp.ResourceData = client
+	resp.DataSourceData = &connection
+	resp.ResourceData = &connection
 
 }
 

@@ -162,5 +162,5 @@ func (d *networkDataSource) Configure(_ context.Context, req datasource.Configur
 		return
 	}
 
-	d.client = req.ProviderData.(*uci.SshTree)
+	d.client = req.ProviderData.(*uciConnection).Client
 }

@@ -34,7 +34,8 @@ func (r *networkResource) Configure(_ context.Context, req resource.ConfigureReq
 	if req.ProviderData == nil {
 		return
 	}
-	r.client = req.ProviderData.(*uci.SshTree)
+
+	r.client = req.ProviderData.(*uciConnection).Client
 }
 
 // Schema defines the schema for the resource.
