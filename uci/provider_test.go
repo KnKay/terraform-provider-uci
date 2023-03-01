@@ -14,7 +14,7 @@ const (
 provider "uci" {
   username = "root"
   password = "test123"
-  host     = "192.168.1.129:22"
+  host     = "192.168.1.199:22"
 }
 `
 )

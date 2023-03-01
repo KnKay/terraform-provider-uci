@@ -15,7 +15,7 @@ func TestNetworkDataSource(t *testing.T) {
 				Config: providerConfig + `data "uci_network" "test" {}`,
 				Check: resource.ComposeAggregateTestCheckFunc(
 					// Verify number of coffees returned
-					resource.TestCheckResourceAttr("data.uci_network.test", "wan.interface", "eth1"),
+					resource.TestCheckResourceAttr("data.uci_network.test", "wan.interface", "eth0"),
 					resource.TestCheckResourceAttr("data.uci_network.test", "wan.proto", "dhcp"),
 				),
 			},
