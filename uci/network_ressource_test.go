@@ -51,6 +51,20 @@ resource "uci_network" "test" {
 					resource.TestCheckResourceAttr("uci_network.test", "wan.interface", "eth1"),
 				),
 			},
+			{
+				Config: providerConfig + `
+resource "uci_network" "test" {
+	wan = {
+		interface = "eth0"
+		proto = "dhcp"
+	}
+}
+`,
+				Check: resource.ComposeAggregateTestCheckFunc(
+					// Verify first order item updated
+					resource.TestCheckResourceAttr("uci_network.test", "wan.interface", "eth0"),
+				),
+			},
 			// Delete testing automatically occurs in TestCase
 		},
 	})
