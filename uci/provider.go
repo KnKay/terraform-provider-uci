@@ -200,6 +200,7 @@ func (p *uciProvider) DataSources(_ context.Context) []func() datasource.DataSou
 	return []func() datasource.DataSource{
 		NewSystemDataSource,
 		NewNetworkDataSource,
+		NewOpkgDataSource,
 	}
 }
 

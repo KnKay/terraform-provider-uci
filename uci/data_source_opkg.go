@@ -2,7 +2,7 @@ package uci
 
 import (
 	"context"
-	"fmt"
+	"strings"
 
 	"github.com/KnKay/terraform-provider-uci/internal/ssh_helper"
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
@@ -11,8 +11,8 @@ import (
 )
 
 type opkgDataSourceModel struct {
-	ID       types.Int64   `tfsdk:"id"`
-	packages []opkgPackage `tfsdk:"packages"`
+	ID       types.String  `tfsdk:"id"`
+	Packages []opkgPackage `tfsdk:"packages"`
 }
 
 type opkgPackage struct {
@@ -78,5 +78,26 @@ func (d *opkgDataSource) Configure(_ context.Context, req datasource.ConfigureRe
 // Read refreshes the Terraform state with the latest data.
 func (d *opkgDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
 	var state opkgDataSourceModel
-	fmt.Print(state)
+	state.ID = types.StringValue("1")
+	lines, err := d.client.RunCommand("opkg list")
+	if err != nil {
+		resp.Diagnostics.AddError(
+			"Unable to Load config",
+			err.Error(),
+		)
+		return
+	}
+	for _, line := range strings.Split(lines, "\n") {
+		if line != "" {
+			info := strings.Split(line, " - ")
+			state.Packages = append(state.Packages, opkgPackage{Name: types.StringValue(info[0]), Version: types.StringValue(info[1])})
+		}
+
+	}
+	// Set state
+	diags := resp.State.Set(ctx, &state)
+	resp.Diagnostics.Append(diags...)
+	if resp.Diagnostics.HasError() {
+		return
+	}
 }
