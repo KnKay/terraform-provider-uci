@@ -5,6 +5,7 @@ import (
 	"os"
 	"time"
 
+	"github.com/KnKay/terraform-provider-uci/internal/ssh_helper"
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/provider"
@@ -30,7 +31,7 @@ func New() provider.Provider {
 type uciProvider struct{}
 
 type uciConnection struct {
-	Config *ssh.ClientConfig
+	Ssh    *ssh_helper.SshClient
 	Client *uci.SshTree
 }
 
@@ -182,9 +183,10 @@ func (p *uciProvider) Configure(ctx context.Context, req provider.ConfigureReque
 		)
 		return
 	}
+	ssh_client, err := ssh_helper.NewClient(conf, host)
 	connection := uciConnection{
 		Client: client,
-		Config: conf,
+		Ssh:    ssh_client,
 	}
 	// Make the uci client available during DataSource and Resource
 	// type Configure methods.
