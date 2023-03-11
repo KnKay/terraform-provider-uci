@@ -30,7 +30,7 @@ func TestCommand(t *testing.T) {
 	if err != nil {
 		t.Error(err.Error())
 	}
-	reply, err := client.RunCommand(conf, command)
+	reply, err := client.RunCommand(command)
 	if err != nil {
 		t.Error(err.Error())
 	}

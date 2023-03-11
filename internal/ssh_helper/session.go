@@ -22,7 +22,7 @@ func NewClient(config *ssh.ClientConfig, host string) (t *SshClient, err error) 
 	return
 }
 
-func (t *SshClient) RunCommand(config *ssh.ClientConfig, command string) (reply string, err error) {
+func (t *SshClient) RunCommand(command string) (reply string, err error) {
 	t.client, err = ssh.Dial("tcp", t.host, t.config)
 	session, err := t.client.NewSession()
 	if err != nil {
